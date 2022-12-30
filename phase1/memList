@@ -1,0 +1,209 @@
+#include <stdio.h>
+#include <limits.h>
+#include "headers.h"
+#include <math.h>
+
+// Represent a node of the singly linked list
+
+typedef struct
+{
+    int index; // slot size = 2^index
+    struct node *head;
+    struct node *tail;
+
+} memList;
+
+struct node
+{
+    int data;// represents the strating address of each hole 
+    struct node *next;
+};
+
+int smallestElement(memList *memlist);
+void addNode(memList *mlist, int data);
+int extractMin(memList *memlist);
+void sort(memList *memlist);
+
+// addNode() will add a new node to the list
+void addNode(memList *mlist, int data)
+{
+    // Create a new node
+    struct node *newNode = (struct node *)malloc(sizeof(struct node));
+    newNode->data = data;
+    newNode->next = NULL;
+
+    // Checks if the list is empty
+    if (mlist->head == NULL)
+    {
+        // If list is empty, both head and tail will point to new node
+        mlist->head = newNode;
+        mlist->tail = newNode;
+    }
+    else
+    {
+        // newNode will be added after tail such that tail's next will point to newNode
+        mlist->tail->next = newNode;
+        // newNode will become new tail of the list
+        mlist->tail = newNode;
+    }
+    sort(mlist);
+}
+
+void deleteNode(memList *mlist, int key)
+{
+    // Store head node
+    struct node *temp = mlist->head, *prev;
+
+    // If head node itself holds the key to be deleted
+    if (temp != NULL && temp->data == key)
+    {
+        mlist->head = temp->next; // Changed head
+        free(temp);               // free old head
+        return;
+    }
+
+    // Search for the key to be deleted, keep track of the
+    // previous node as we need to change 'prev->next'
+    while (temp != NULL && temp->data != key)
+    {
+        prev = temp;
+        temp = temp->next;
+    }
+
+    // If key was not present in linked list
+    if (temp == NULL)
+        return;
+
+    // Unlink the node from linked list
+    prev->next = temp->next;
+
+    free(temp); // Free memory
+    sort(mlist);
+}
+
+int getMin(memList *memlist)
+{
+    int min = INT_MAX;
+    struct node *ptr = memlist->head;
+    while (ptr != NULL)
+    {
+        if (min > ptr->data)
+            min = ptr->data;
+        ptr = ptr->next;
+    }
+    return min;
+}
+
+int extractMin(memList *memlist)
+{
+    int min = getMin(memlist);
+    deleteNode(memlist, min);
+    return min;
+}
+
+// display() will display all the nodes present in the list
+void display(memList *mlist)
+{
+    // Node current will point to head
+    struct node *current = mlist->head;
+    if (mlist->head == NULL)
+    {
+        printf("List is empty \n");
+        return;
+    }
+    while (current != NULL)
+    {
+        // Prints each node by incrementing pointer
+        printf("%d ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+void sort(memList *mlist)
+{
+    int i, j, a;
+    struct node *h = mlist->head;
+
+    struct node *temp1;
+    struct node *temp2;
+
+    for (temp1 = h; temp1 != NULL; temp1 = temp1->next)
+    {
+        for (temp2 = temp1->next; temp2 != NULL; temp2 = temp2->next)
+        {
+            if (temp2->data < temp1->data)
+            {
+                a = temp1->data;
+                temp1->data = temp2->data;
+                temp2->data = a;
+            }
+        }
+    }
+}
+
+
+// returns the starting address of the adjacent holes if exist. otherwise, returns -1
+int compactList(memList *mlist)
+{
+    struct node *temp1;
+        struct node *temp2;
+
+    for (temp1 = mlist->head; temp1 != NULL; temp1 = temp1->next)
+    {
+       for (temp2 = temp1->next; temp2 != NULL; temp2 = temp2->next)
+        {
+            if (temp1->data % (int)(2 * pow(2, mlist->index)) ==0 && temp1->data + pow(2, mlist->index) == temp2->data)
+            {
+                // compact 
+                return temp1->data; 
+                printf("yes:  %d, %d\n", temp1->data,temp2->data);
+            }
+        }
+
+    }
+
+    return -1; 
+}
+
+// int main()
+// {
+//     memList mlist = (memList){
+//         .head = NULL,
+//         .tail = NULL,
+//         .index = 3,
+//     };
+
+//     //     // Adds data to the list
+
+//     addNode(&mlist, 0);
+//     addNode(&mlist, 256);
+
+//     addNode(&mlist, 8);
+//     int c = compactList(&mlist);
+//     printf("compact at : %d \n", c ); 
+
+//     // int min = extractMin(&mlist);
+
+//     //      addNode(5);
+//     //      addNode(4);
+
+//     // deleteNode(&mlist, 2);
+
+//     //     // Displaying original list
+//     //     printf("Original list: \n");
+//     display(&mlist);
+//     // printf("min : %d\n", smallestElement(&mlist));
+
+//     //     // Original list : 9 7 2 5 4
+
+//     //     // Sorting list
+//     // sortList(&mlist);
+
+//     //     // Displaying sorted list
+//     //     printf("Sorted list: \n");
+//     //     display();
+//     //     // Sorted list : 2 5 7 9
+
+//     //     return 0;
+// }
