@@ -60,6 +60,19 @@ int AllocateMemory(memList *free_list, int memSize)
     return addr; 
 }
 
+void DeallocateMemory(memList *free_list,int memStart, int memSize)
+{
+    int list_index = ceil(log2(memSize));
+    AddHole(&free_list[list_index], memStart);
+    // run the compaction algorithm 
+    int JoinAddr = compactList(&free_list[list_index]); 
+    if(JoinAddr != -1)
+    {
+        AddHole(&free_list[list_index + 1], JoinAddr); 
+    }
+
+}
+
 int main()
 {
     // priQ **free_list = (priQ **)calloc(sizeof(priQ *), 11);
@@ -78,13 +91,11 @@ int main()
     // // addr represents the starting address of a slot = 256 [ assgn it to a process]
     // }
     
+    DeallocateMemory(free_list, 8, 8);
+    DeallocateMemory(free_list, 15, 8); 
 
-     // deallocation algorithm
 
-    // // Now, you have two holes having 256[ 0->255->511]
-
-    // // m = priQpeek(free_list[(int)log2(p.memsize)]);
-    // // printf("second : %d\n", m->memStart);
+    display(&free_list[3]); 
 
     // // Loop over the [(int)log2(p.memsize)]th  list and run the compaction algorithm
 

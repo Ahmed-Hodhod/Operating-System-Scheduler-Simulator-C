@@ -49,7 +49,7 @@ void AddHole(memList *mlist, int address)
     SortHoles(mlist);
 }
 
-void deleteNode(memList *mlist, int address)
+void deleteHole(memList *mlist, int address)
 {
     // Store head node
     struct node *temp = mlist->head, *prev;
@@ -100,7 +100,7 @@ int GetMinAddress(memList *memlist)
 int ExtractFirstAddress(memList *memlist)
 {
     int min = GetMinAddress(memlist);
-    deleteNode(memlist, min);
+    deleteHole(memlist, min);
     return min;
 }
 
@@ -159,7 +159,10 @@ int compactList(memList *mlist)
             if (temp1->address % (int)(2 * pow(2, mlist->index)) ==0 && temp1->address + pow(2, mlist->index) == temp2->address)
             {
                 // compact 
-                return temp1->address; 
+                int addr =  temp1->address; 
+                deleteHole(mlist, temp1->address); 
+                deleteHole(mlist, temp2->address); 
+                return addr; 
                 //printf("yes:  %d, %d\n", temp1->address,temp2->address);
             }
         }
@@ -191,7 +194,7 @@ int compactList(memList *mlist)
 //     //      AddHole(5);
 //     //      AddHole(4);
 
-//     // deleteNode(&mlist, 2);
+//     // deleteHole(&mlist, 2);
 
 //     //     // Displaying original list
 //     //     printf("Original list: \n");
