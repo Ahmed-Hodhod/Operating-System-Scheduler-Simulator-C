@@ -91,7 +91,10 @@ int GetMinAddress(memList *memlist)
             min = ptr->address;
         ptr = ptr->next;
     }
-    return min;
+    if(min != INT_MAX)
+        return min; 
+    else 
+        return -1; 
 }
 
 int ExtractFirstAddress(memList *memlist)
@@ -166,44 +169,44 @@ int compactList(memList *mlist)
     return -1; 
 }
 
-int main()
-{
-    memList mlist = (memList){
-        .head = NULL,
-        .tail = NULL,
-        .index = 3,
-    };
+// int main()
+// {
+//     memList mlist = (memList){
+//         .head = NULL,
+//         .tail = NULL,
+//         .index = 3,
+//     };
 
-    //     // Adds address to the list
+//     //     // Adds address to the list
 
-    AddHole(&mlist, 0);
-    AddHole(&mlist, 256);
+//     AddHole(&mlist, 0);
+//     AddHole(&mlist, 256);
 
-    AddHole(&mlist, 8);
-    int c = compactList(&mlist);
-    printf("compact at : %d \n", c ); 
+//     AddHole(&mlist, 8);
+//     int c = compactList(&mlist);
+//     printf("compact at : %d \n", c ); 
 
-    // int min = ExtractFirstAddress(&mlist);
+//     // int min = ExtractFirstAddress(&mlist);
 
-    //      AddHole(5);
-    //      AddHole(4);
+//     //      AddHole(5);
+//     //      AddHole(4);
 
-    // deleteNode(&mlist, 2);
+//     // deleteNode(&mlist, 2);
 
-    //     // Displaying original list
-    //     printf("Original list: \n");
-    display(&mlist);
-    // printf("min : %d\n", smallestElement(&mlist));
+//     //     // Displaying original list
+//     //     printf("Original list: \n");
+//     display(&mlist);
+//     // printf("min : %d\n", smallestElement(&mlist));
 
-    //     // Original list : 9 7 2 5 4
+//     //     // Original list : 9 7 2 5 4
 
-    //     // SortHolesing list
-    // SortHolesList(&mlist);
+//     //     // SortHolesing list
+//     // SortHolesList(&mlist);
 
-    //     // Displaying SortHolesed list
-    //     printf("SortHolesed list: \n");
-    //     display();
-    //     // SortHolesed list : 2 5 7 9
+//     //     // Displaying SortHolesed list
+//     //     printf("SortHolesed list: \n");
+//     //     display();
+//     //     // SortHolesed list : 2 5 7 9
 
-    //     return 0;
-}
+//     //     return 0;
+// }

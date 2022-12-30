@@ -35,8 +35,8 @@ int main()
 
     
     // initially, there is only one hole [add to initialize]
-    AddHole(free_list[10], ); 
-    priQenqueue(free_list[10], &p);
+    AddHole(free_list[10], 0); 
+   
     
     // use priQ of proccesses for now, consider priority = address
 
